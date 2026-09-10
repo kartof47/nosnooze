@@ -15,6 +15,12 @@ enum RingPolicy {
 
     /// Returns the time of the next ring, or nil when the session is finished.
     static func nextRing(after event: RingEvent, at now: Date, missionCompleted: Bool) -> Date? {
-        nil
+        guard !missionCompleted else { return nil }
+        switch event {
+        case .stopped:
+            return now.addingTimeInterval(reRingAfterStop)
+        case .missionStarted:
+            return now.addingTimeInterval(backupAfterMissionStart)
+        }
     }
 }

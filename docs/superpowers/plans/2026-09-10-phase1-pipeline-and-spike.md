@@ -304,7 +304,7 @@ struct RingPolicyTests {
 git add .
 git commit -m "Add XcodeGen project, CI pipeline and RingPolicy tests"
 git push
-gh run watch --exit-status
+sleep 10 && gh run watch "$(gh run list --branch main --limit 1 --json databaseId -q '.[0].databaseId')" --exit-status
 ```
 
 Expected: the job reaches **Unit tests** and fails there. `gh run view --log-failed` shows `stopWithoutMissionRingsAgainAfterSixtySeconds` and `startingMissionArmsThreeMinuteBackup` failing (both got `nil`); `completedMissionEndsSession` passes. If it fails *earlier* (XcodeGen, Xcode selection, simulator picker), fix that first — this run exists to prove the pipeline.
@@ -331,7 +331,7 @@ Replace the body of `nextRing` in `NoSnooze/Alarm/RingPolicy.swift`:
 git add NoSnooze/Alarm/RingPolicy.swift
 git commit -m "Implement RingPolicy"
 git push
-gh run watch --exit-status
+sleep 10 && gh run watch "$(gh run list --branch main --limit 1 --json databaseId -q '.[0].databaseId')" --exit-status
 gh run download --name NoSnooze-ipa --dir build/artifact
 ```
 
@@ -440,7 +440,7 @@ struct MissionState {
 git add NoSnooze/Alarm/MissionState.swift NoSnoozeTests/MissionStateTests.swift
 git commit -m "Add MissionState"
 git push
-gh run watch --exit-status
+sleep 10 && gh run watch "$(gh run list --branch main --limit 1 --json databaseId -q '.[0].databaseId')" --exit-status
 ```
 
 Expected: run succeeds; 4 new tests pass alongside the 3 `RingPolicy` tests.
@@ -710,7 +710,7 @@ struct NoSnoozeApp: App {
 git add NoSnooze
 git commit -m "Add AlarmKit scheduler, ring intents and spike screen"
 git push
-gh run watch --exit-status
+sleep 10 && gh run watch "$(gh run list --branch main --limit 1 --json databaseId -q '.[0].databaseId')" --exit-status
 gh run download --name NoSnooze-ipa --dir build/artifact
 ```
 
