@@ -1,0 +1,6 @@
+*.xcodeproj/
+NoSnooze/Info.plist
+build/
+Payload/
+*.ipa
+.DS_Store

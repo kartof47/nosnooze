@@ -1,0 +1,44 @@
+name: NoSnooze
+options:
+  bundleIdPrefix: com.kartof47
+  deploymentTarget:
+    iOS: "26.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+targets:
+  NoSnooze:
+    type: application
+    platform: iOS
+    sources: [NoSnooze]
+    info:
+      path: NoSnooze/Info.plist
+      properties:
+        CFBundleDisplayName: NoSnooze
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        NSAlarmKitUsageDescription: "NoSnooze schedules alarms that ring even in silent mode, so you wake up on time."
+        NSSupportsLiveActivities: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.kartof47.nosnooze
+        TARGETED_DEVICE_FAMILY: "1"
+  NoSnoozeTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [NoSnoozeTests]
+    dependencies:
+      - target: NoSnooze
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  NoSnooze:
+    build:
+      targets:
+        NoSnooze: all
+        NoSnoozeTests: [test]
+    test:
+      targets: [NoSnoozeTests]
