@@ -9,6 +9,8 @@ jobs:
   build:
     runs-on: macos-15
     timeout-minutes: 30
+    env:
+      APPETIZE_API_KEY: ${{ secrets.APPETIZE_API_KEY }}
     steps:
       - uses: actions/checkout@v4
 
@@ -52,3 +54,30 @@ jobs:
           name: NoSnooze-ipa
           path: NoSnooze.ipa
           retention-days: 14
+
+      - name: Build simulator app for browser preview
+        if: env.APPETIZE_API_KEY != ''
+        run: |
+          xcodebuild build \
+            -project NoSnooze.xcodeproj \
+            -scheme NoSnooze \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build-sim \
+            ARCHS=arm64 ONLY_ACTIVE_ARCH=NO CODE_SIGNING_ALLOWED=NO
+          cd build-sim/Build/Products/Debug-iphonesimulator
+          zip -qry "$GITHUB_WORKSPACE/NoSnooze-sim.zip" NoSnooze.app
+
+      - name: Upload browser preview to Appetize
+        if: env.APPETIZE_API_KEY != ''
+        env:
+          APPETIZE_PUBLIC_KEY: ${{ vars.APPETIZE_PUBLIC_KEY }}
+        run: |
+          URL="https://api.appetize.io/v1/apps${APPETIZE_PUBLIC_KEY:+/$APPETIZE_PUBLIC_KEY}"
+          RESPONSE=$(curl -sS --fail-with-body -X POST "$URL" \
+            -H "X-API-KEY: $APPETIZE_API_KEY" \
+            -F "file=@NoSnooze-sim.zip" \
+            -F "platform=ios")
+          KEY=$(echo "$RESPONSE" | python3 -c "import json, sys; print(json.load(sys.stdin)['publicKey'])")
+          echo "Browser preview: https://appetize.io/app/$KEY" | tee -a "$GITHUB_STEP_SUMMARY"
