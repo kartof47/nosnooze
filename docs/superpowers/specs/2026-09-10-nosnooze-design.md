@@ -32,7 +32,9 @@ through silent mode and Focus and fire even if the app was force-quit.
 
 Each alarm's alert has two buttons:
 
-- **Start mission** — opens the app on the mission screen.
+- **Start mission** — opens the app on the mission screen and arms a **backup
+  ring 3 minutes later**, cancelled when the mission is completed. Opening the
+  app and falling back asleep does not end the session.
 - **Stop** — runs a custom stop intent. If no mission has been completed for this
   alarm, it schedules a one-off **re-ring 60 seconds later**. This repeats until a
   mission is completed.
