@@ -4,7 +4,7 @@ import SwiftUI
 struct NoSnoozeApp: App {
     var body: some Scene {
         WindowGroup {
-            Text("NoSnooze")
+            SpikeView()
                 .preferredColorScheme(.dark)
         }
     }
